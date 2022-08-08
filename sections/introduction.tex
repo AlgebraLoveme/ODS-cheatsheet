@@ -1,0 +1,41 @@
+\section{Introduction}
+
+\textbf{A classical algorithm is evaluated on space and time complexity, but a learning algorithm is mainly evaluated on how well it explains the data.}
+
+Definitions:
+\begin{enumerate}
+    \item A \textit{risk} or \textit{loss} is a function $l: \mathcal{H} \times \mathcal{X} \rightarrow \mathcal{R}$, representing how bad a given hypothesis $H \in \mathcal{H}$ is, on the given data $X$.
+    \item The \emph{expected risk} is a function $l(H) := \E_\mathcal{X} (l(H, X))$, representing how bad a given hypothesis $H \in \mathcal{H}$ is, measured on the whole data distribution.
+    \item An optimal hypothesis is a hypothesis $H^* := \argmin_{H\in\mathcal{H}} l(H)$.
+    \item An \emph{empirical risk minimization (ERM)} hypothesis is a hypothesis $H^*(X):= \argmin_{H\in\mathcal{H}} l(H, X)$.
+    \item The \emph{probably approximately correct (PAC)} theory characterizes the following: under which condition that given $\delta, \epsilon>0$, the ERM $\tilde{H}:=H^*(X)$ satisfies $l(\tilde{H}) \le \inf_{H\in \mathcal{H}} l(H) +\epsilon$ with probability at least $1-\delta$. The probability is over the sampling.
+\end{enumerate}
+
+\textbf{Theorem}: Suppose that for any $\delta, \epsilon>0$, there exists $n_{0} \in \mathbb{N}$ such that for $n \geq n_{0}$,
+$
+\sup _{H \in \mathcal{H}}\left|\ell_{n}(H)-\ell(H)\right| \leq \varepsilon
+$
+with probability at least $1-\delta$. Then, for $n \geq n_{0}$, an approximate empirical risk minimizer $\tilde{H}_{n}$ is PAC for expected risk minimization, meaning that it satisfies
+$
+\ell\left(\tilde{H}_{n}\right) \leq \inf _{H \in \mathcal{H}} \ell(H)+3 \varepsilon
+$
+with probability at least $1-\delta$.
+
+Note: the condition $\sup _{H \in \mathcal{H}}\left|\ell_{n}(H)-\ell(H)\right| \leq \varepsilon$ is to ensure $\ell\left(\tilde{H}_{n}\right) \leq \ell_{n}\left(\tilde{H}_{n}\right)+\varepsilon$, which cannot be proved by the law of large numbers, because it cannot be applied to $\tilde{H}_{n}$ which is data dependent (thus dependent to the random variables involved in the law of large numbers).
+
+\subsection{VC Theory}
+
+Setting: binary classification, unknown distribution over the data source.
+
+For $n$ given samples, each hypothesis $H \in \mathcal{H}$ induces a cut $H \cap \{x_1, \dots, x_n\}$. The set of all possible cuts by the hypothesis class on $n$ given samples is $\mathcal{H} \cap \{x_1, \dots, x_n\}:= \{H \cap \{x_1, \dots, x_n\} : H \in \mathcal{H} \}$. For any $n$ samples, the elements of this set is bounded by $2^n$, as each sample can be either 0 or 1. Further, define $\mathcal{H}(n) := \max_{x_1, \dots, x_n} |\mathcal{H} \cap \{x_1, \dots, x_n\}|$.
+
+\textbf{Theorem (VC)}: Let $\mathcal{D}$ be a probability space, $\mathcal{H}$ a set of events, $n \in \mathbb{N}, \varepsilon>0$. Then
+$
+\sup _{H \in \mathcal{H}}\left|\prob_{n}(H)-\prob(H)\right|>\varepsilon
+$
+with probability at most
+$
+4 \mathcal{H}(2 n) \cdot \exp \left(-\varepsilon^{2} n / 8\right)
+$.
+
+Note that in this case, $\ell(H)=\prob(H)$, thus if $\mathcal{H}(n)$ is polynomially bounded, we have $\sup _{H \in \mathcal{H}}\left|\ell_{n}(H)-\ell(H)\right| \leq \varepsilon$ for sufficiently large $n$, which implies PAC property.

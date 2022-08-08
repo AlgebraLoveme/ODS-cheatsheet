@@ -1,0 +1,50 @@
+\section{Convex Functions and Optimization}
+
+\textbf{Cauchy-Schwarz Inequality}: Let $u, v \in \mathbb{R}^d$, then $|\langle u,v\rangle| \le \|u\| \|v\|$ for any inner product space, where $\|\cdot\|$ is the induced norm of the inner product, defined as $\|u\| = \sqrt{\langle u,u\rangle}$.
+
+\textbf{Spectral Nrom}: Let $A$ be a matrix of shape $m\times d$. The spectral norm of $A$ is $\|A\| = \max_{\|v\|_2=1} \|Av\|_2$.
+
+\textbf{Definitions}:
+\begin{enumerate}
+    \item A set $S$ is convex if for any $x, y\in S$ and any $\lambda \in [0,1]$, $\lambda x + (1-\lambda) y \in S$.
+    \item A function $f$ is convex if (1) its domain is convex, (2) the function value of any convex combination is below the convex combination of the function values, i.e., for all $x, y \in \dom(f)$ and all $\lambda \in [0,1]$, we have $f(\lambda x + (1-\lambda) y) \le \lambda f(x) + (1-\lambda) f(y)$.
+    \item A function $f$ is strictly convex if the inequality above is strict.
+    \item The epigraph of a function is the upper region characterized by the function, i.e., $\epi(f) = \{(x, y): x \in \dom(f) \land y \ge f(x) \}$.
+\end{enumerate}
+
+\textbf{General Properties}:
+\begin{enumerate}
+    \item (2.11) $f$ is convex iff $\epi(f)$ is a convex set. Proof by definition.
+    \item Jensen's Inequality: for $\lambda_i \ge 0$, $\sum_i \lambda_i = 1$ and a convex function $f$, then $f(\sum_i \lambda_i x_i) \le \sum_i \lambda_i f(x_i)$ for any $x_i \in \dom(f)$. Proof by induction.
+    \item (2.13) A convex function $f$ with $\dom(f)$ open and $\dom(f) \in \mathbb{R}^d$ is continuous. Proof: first show $f$ is bounded on any hypercube and has the extreme values on some corners. Then use sufficiently small cube to conclude continuity.
+    \item \textbf{First-order characterization}: A differentiable function $f$ with open convex domain is convex iff for any $x,y\in \dom(f)$, we have $f(y) \ge f(x) + \nabla f(x)^\top (y-x)$. Proof: (1) One side: Taylor expansion for $f(x+t(y-x))$ on $t$ at $x$ and use $f(x+t(y-x))\le f(x) + t(f(y)-f(x))$; (2) The other side: introduce $z = \lambda x + (1-\lambda) y$, then apply the inequalities $f(x) \ge f(z) + \nabla f(z)^\top (x-z)$ and $f(y) \ge f(z) + \nabla f(z)^\top (y-z)$ and plug into $\lambda f(x) + (1-\lambda)f(y)$.
+    \item \textbf{Monotonicity of the gradient}: A differentiable function $f$ with open convex domain is convex iff $(\nabla f(y) - \nabla f(x))^\top (y-x) \ge 0$. Proof: (1) One side: use first-order characterization alternatively for $x$ and $y$, then add these two inequalities. (2) The other side: define $h(t) = f(x+t(y-x))$, thus $h^\prime(t) = \nabla f(x+t(y-x))^\top (y-x)$. By monotonicity of the gradient, $h^\prime(t) \ge \nabla f(x)^\top (y-x)$ for $t \in (0,1)$. By mean-value theorem, there exists $c \in (0,1)$ such that $h(1)-h(0)=h^\prime(c) \ge \nabla f(x)^\top (y-x)$. Plugging in $h(1)=f(y)$ and $h(0)=f(x)$ suffices.
+    \item \textbf{Second-order characterization}: A twice continuously differentiable function $f$ with open convex domain is convex iff $\nabla^2 f(x) \succeq 0$. Proof: (1) One side: use $h(t) = f(x+t(y-x))$ again. By monotonicity of the gradient, we can conclude $\frac{h^\prime(\delta) - h^\prime(0)}{\delta} \ge 0$, which implies $h^{\dprime}(0) \ge 0$. Note $h^{\dprime}(t) = (y-x)^\top \nabla^2 f(x+t(y-x)) (y-x)$, and thus $h^{\dprime} (0) \ge 0$ implies $\nabla^2 f(x) \succeq 0$. (2) The other side: mean-value theorem implies $h^\prime(1) - h^\prime(0) = h^{\dprime}(c)$ for some $c \in (0,1)$, which is $(\nabla f(y) - \nabla f(x))^\top (y-x) = (y-x)^\top \nabla^2 f(x+c(y-x)) (y-x) \ge 0$. This is the monotonicity of the gradient, thus $f$ is convex.
+    \item (2.18) \textbf{Operations that perserve convexity}: For convex functions $\{f_i\}$, $f:=\max_i f_i$ and $f:=\sum_i  \lambda_i f_i$ for $\lambda_i \ge 0$ are convex on $\dom(f):=\cap_i \dom(f_i)$. For convex $f$ and affine $g$, $f \circ g$ is also convex.
+\end{enumerate}
+
+\textbf{Minimizer Properties}:
+\begin{enumerate}
+    \item (2.20) Every local minimum of a convex function is a global minimum. Proof by contradiction, moving a small step from the local minimum towards the global minimum violates convexity.
+    \item (2.21 and 2.22) For a differentiable convex function with open domain, $\nabla f(x) = 0$ iff $x$ is a global minimum. Proof: (1) One side: first-order characterization. (2) The other side: contradiction by moving a small step in the gradient descent direction.
+    \item (2.24) Positive definite Hessian implies strict convexity. Proof by Taylor expansion. The reverse is false, e.g., $f(x)=x^4$ is strictly convex, but its Hessian is not positive definite at 0.
+    \item (2.25) A stricly convex function has at most one global minimum. Proof by contradiction.
+    \item (2.27) For $f$ convex and differentiable over an open domain, $x^*$ is a minimizer over $\dom(f)$ iff $\nabla f(x^*)^\top (x-x^*) \ge 0$ for any $x \in \dom(f)$. Proof by first-order characterization.
+\end{enumerate}
+
+\subsection{Convex Programming}
+
+\textbf{Definitions}:
+\begin{enumerate}
+    \item The standard form of a convex program is to minimize $f(x)$ s.t. $f_i(x) \le 0$ and $h_i(x) =0$, where $f$ and $f_i$ are convex and $h_i$ are affine. The feasible set is convex and the objective is convex.
+    \item The Lagrangian of a program is $L(x, \lambda, \nu):= f(x) + \sum_i \lambda_i f_i(x) + \sum_i \nu_i h_i(x)$. The $\lambda_i$ and $\nu_i$ are called Lagrange multipliers.
+    \item The Lagrange dual function is $g(\lambda_i, \nu_i) = \inf_{x\in\mathcal{D}} L(x, \lambda_i, \nu_i)$, where $\mathcal{D}$ is the feasible set.
+    \item The Lagrange dual program is to maximize $g(\lambda_i, \nu_i)$ s.t. $\lambda_i \ge 0$.
+\end{enumerate}
+
+\textbf{Properties}:
+\begin{enumerate}
+    \item \textbf{Weak duality}: for any feasible $x$ and $\lambda_i \ge 0$, we have $g(\lambda_i, \nu_i) \le f(x)$, i.e., $\max_{\lambda_i \ge 0} g(\lambda_i, \nu_i) \le \inf_{x\in\mathcal{D}} f(x)$. Proof by noticing that for feasible $x$, $L(x, \lambda_i, \nu_i) \le f(x)$.
+    \item \textbf{Strong duality (Slater's condition)} For convex program with a feasible $x$ such that the inequalities are stricly satisfied (Slater's point), then $\max_{\lambda_i \ge 0} g(\lambda_i, \nu_i) = \inf_{x\in\mathcal{D}} f(x)$. If this value is finite, then it is attained by a feasible solution of the dual program. Slater's condition is sufficient but not necessary for strong duality.
+    \item \textbf{Strong duality (KKT condition)} Strong duality holds iff the followings hold for the solution (1) (complementary slackness) $\lambda_i f_i(x)=0$, (2) (vanishing gradient) $\nabla_x L(x, \lambda_i, \nu_i) =0$. (3) Primal feasibility and dual feasibility.
+\end{enumerate}

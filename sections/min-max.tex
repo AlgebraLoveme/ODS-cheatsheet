@@ -1,0 +1,19 @@
+\section{Min-Max Optimization}
+
+The min-max problem is defined as $\min_{x\in X} \max_{y \in Y} \phi(x,y)$.
+
+\textbf{Definitions}:
+\begin{enumerate}
+    \item \textbf{Saddle point and minimax point}: $(x^*, y^*)$ is a saddle point if $\phi(x^*, y) \le \phi(x^*, y^*) \le \phi(x, y^*)$ for any $x, y$. $(x^*, y^*)$ is a global minimax point if $\phi(x^*, y) \le \phi(x^*, y^*) \le \max_{y^\prime \in Y} \phi(x, y^\prime)$ for any $x, y$. Game theory interpretation: saddle point means Nash equilibrium, where no play has the incentive to make unilateral changes; global minimax point is Stackelberg equilibrium, where it is the best response to the best response.
+    \item \textbf{Convex-concave function}: $\phi(x, y)$ is convex-concave if $\phi(x, y)$ is convex for every fixed $y$ and $\phi(x,y)$ is concave for every fixed $x$.
+    \item \textbf{Strongly-convex-strongly-concave function}: $\phi(x, y)$ is strongly-convex-strongly-concave if $\phi(x, y)$ is $\mu_1$-strongly convex for every fixed $y$ and $\phi(x,y)$ is $\mu_2$-strongly concave for every fixed $x$.
+    \item \textbf{Duality gap}: defined to be $\max_y \phi(\hat{x}, y) - \min_x \phi(x, \hat{y})$. When duality gap is smaller than or equal to $\epsilon$, we say $(\hat{x}, \hat{y})$ is an $\epsilon$-saddle point.
+\end{enumerate}
+
+\textbf{Properties}:
+\begin{enumerate}
+    \item \textbf{Characterization of saddle points}: Define $\bar{\phi}(x) = \max_y \phi(x,y)$ and $\underline{\phi}(y) = \min_x \phi(x,y)$. Then $(x^*, y^*)$ is a saddle point iff $\max_y \min_x \phi(x,y) = \min_x \max_y \phi(x,y)$, $x^* \in \argmin_x \bar{\phi(x)}$ and $y^* \in \argmax_y \underline{\phi}(y)$. Proof: by definition.
+    \item \textbf{Minimax Theorem}: If $X$ and $Y$ are closed convex sets, one of them is bounded, and $\phi(x,y)$ is a continuous convex-concave function, then there exists a saddle point on $X \times Y$ and $\max_y \min_x \phi(x, y) = \min \max \phi(x, y)$.
+\end{enumerate}
+
+\textbf{Gradient Descent Ascent}: do $x_{t+1} = \Pi_X(x_t - \gamma \nabla_x \phi(x_t, y_t))$ and $y_{t+1} = \Pi_Y (y_t + \gamma \nabla_y \phi(x_t, y_t))$. This simultaneously updates $x$ and $y$.

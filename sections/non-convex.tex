@@ -1,0 +1,9 @@
+\section{Nonconvex Functions}
+
+\textbf{Smooth functions (no longer convex)}: $f$ is called $L$-smooth if $f(y) \le f(x)+\nabla f(x)^\top (y-x) + \frac{L}{2}\|y-x\|^2$. (9.1) If $\|\nabla^2 f(x)\|\le L$ for any $x$, then $f$ is smooth. For convex $f$ and \emph{open} $\dom(f)$, the reverse is also true.
+
+\textbf{Gradient Descent for smooth functions}: (9.2) let $f$ has a global minimum $x^*$ and is $L$-smooth. With $\gamma=1/L$, GD yields $\frac{1}{T}\sum_t \|\nabla f(x_t)\|^2 \le \frac{2L}{T}(f(x_0) - f(x^*))$. Proof: by sufficient decrease, we have $\|\nabla f(x_t)\|^2 \le 2L(f(x_t) - f(x_{t+1}))$. Sum together gives the result.
+
+\textbf{GD with $\gamma=1/L$ cannot overshoot}: (9.3) if $x$ is not a critical point, and $f$ is $L$-smooth over the line connecting $x$ and $x^\prime = x - \gamma \nabla f(x)$. Then with $\gamma = 1/L^\prime < 1/L$, $x^\prime$ is not a critical point. This means there is no critical point between $x$ and $x^\prime$, so no overshooting.
+
+\textbf{Deciding whether a critical point is a local minimum is coNP-complete.}

@@ -1,0 +1,43 @@
+\section{Smoothing Techniques}
+
+
+\subsection{Convex Conjugate}
+\textbf{Convex conjugate (Legendre-Fenchel)}: for any $f$, its convex conjugate is given as $f^*(y) = \sup_{x\in \dom(f)} \{x^\top y - f(x)\}$.
+
+\textbf{Properties}:
+\begin{enumerate}
+    \item \textbf{Fenchel's inequality}: $f(x)+f^*(y) \ge x^\top y$ for any $x, y$. Proof by definition.
+    \item \textbf{Conjugate of a conjugate}: (7.2) If $f$ is convex, lower semi-continuous and proper, then $(f^*)^* = f$. A proper convex function means $f(x)>-\infty$.
+    \item \textbf{Strong convexity implies nice conjugate}: (7.3) If $f$ is $\mu$-strongly convex, then $f^*$ is continuously differentiable and $\frac{1}{\mu}$ smooth.
+    \item \textbf{Conjugate of function sum}: If $f$ and $g$ is lower semi-continuous and convex, then $(f+g)^*(x) = \inf_y\{f^*(y)+g^*(x-y)\}$.
+\end{enumerate}
+
+\subsection{Nesterov's Smoothing}
+Use $f_\mu(x) = \max_{y \in \dom(f^*)} \{x^\top y - f^*(y) - \mu d(y)\}$ as the surrogate function to minimize. $d(y)$ is a $1$-strongly convex and nonnegative everywhere function, called the proximity function. Typical choices include $d(y) = \frac{1}{2}\|y-y_0\|^2$ and $d(y) = \frac{1}{2}\sum w_i(y_i - y_{0,i})^2$ for $w_i\ge 1$. This makes $f_\mu(x)$ to be $\frac{1}{\mu}$-smooth, as $f^*(y)+\mu d(y)$ is $\mu$-strongly convex.
+
+\textbf{Approximation Error}: for convex $f$ with bounded $\dom(f^*)$, we have $f(x)-\mu D^2 \le f_\mu(x) \le f(x)$, where $D^2 = \max_{y\in\dom(f^*)} d(y)$. The tradeoff between approximation error and optimization error: $f(x) - f^* \le [f(x) - f_\mu(x)] + [f_\mu(x) - \min_x f_\mu(x)]$. With AGD, we get $f(x_t)- f^* = O(\mu D^2 + \frac{R^2}{\mu t^2})$. To achieve approximation error $\epsilon$, we need $\mu = O(\frac{\epsilon}{D^2})$. Therefore, $T_\epsilon = O(\frac{RD}{\epsilon})$.
+
+\subsection{Moreau-Yosida Smoothing}
+
+Use $f_{\mu}(x) = \min_y \{f(y) + \frac{1}{2\mu}\|x-y\|^2\}$. This is actually the special case of Nesterov's smoothing with $d(y)=\frac{1}{2}\|y\|^2$. Proof: $f_\mu^{Nes}(x) = \max_y\{x^\top y - f^*(y) - \frac{\mu}{2}\|y\|^2\}= (f^* + \frac{\mu}{2}\|\cdot\|^2)^*(x) = \inf_y \{f(y) + \frac{1}{2\mu}\|x-y\|^2\}$.
+
+\textbf{Properties}: (1) $f_\mu(x)$ is $\frac{1}{\mu}$-smooth; (2) $\min_x f(x) = \min_x f_\mu(x)$. (3) GD reduces to proximal minimization: define $\prox_{\mu\cdot f} = \argmin_y \{f(y) + \frac{1}{2\mu}\|x-y\|^2\}$, then $x_{t+1} = x_t - \mu \nabla f_\mu(x_t) \Leftrightarrow x_{t+1} = \prox_{\mu\cdot f}(x_t)$.
+
+\textbf{Proximal operator}: the proximal operator of convex function $f$ at $x$ is defined as $\prox_f(x) = \argmin_y\{f(y)+\frac{1}{2}\|x-y\|^2\}$. For continuous convex function $f$, $\prox_f(x)$ exists and is unique.
+
+\textbf{Properties}:
+\begin{enumerate}
+    \item \textbf{Fixed point}: If $f$ is convex, then $x^* \in \argmin f(x) \Leftrightarrow x^* = \prox_f(x^*)$. Proof by definition.
+    \item \textbf{Non-expansive}: $\|\prox_f(x) - \prox_f(y)\| \le \|x-y\|$. Proof: Let $\mu_x = \prox_f(x)$ and $\mu_y = \prox_f(y)$. By optimality condition, $x - \mu_x \in \partial f(\mu_x)$ and $y - \mu_y \in \partial f(\mu_y)$. By the monotonicity of gradient, $(x-\mu_x - (y-\mu_y))^\top (\mu_x - \mu_y) \ge 0$. This means $\|\mu_x - \mu_y\|^2 \le (x-y)^\top (\mu_x - \mu_y) \le \|x-y\|\|\mu_x - \mu_y\|$.
+    \item \textbf{Moreau decomposition}: For any $x$, $x = \prox_f(x) + \prox_{f^*}(x)$. Proof: use $u_x \in \partial f^*(x-u_x)$.
+\end{enumerate}
+
+\textbf{Proximal Point Algorithm}: $x_{t+1} = \prox_{\gamma_t\cdot f}(x_t)$. (7.14) If $f$ is convex, then $f(x_{T}) - f^* \le \frac{\|x_0 - x^*\|^2}{2\sum_{t=0}^{T-1} \gamma_t}$. Proof: by definition, $f(x_{t+1}) + \frac{1}{2\gamma_t} \|x_{t+1} - x_t\|^2 \le f(x_t)$, which implies $f(x_{t+1}) - f(x_t) \le -\frac{1}{2\gamma_t} \|x_{t+1}-x_t\|^2$. By optimality condition, $0 \in \partial f(x_{t+1}) + \frac{1}{\gamma_t}(x_{t+1} - x_t)$, which implies $\frac{x_t - x_{t+1}}{\gamma_t} \in \partial f(x_{t+1})$. Therefore, by the definition of subgradient, $f(x_{t+1}) - f^* \le \frac{1}{\gamma_t} (x_t - x_{t+1})^\top (x_{t+1} - x^*) \le \frac{1}{\gamma_t} [(x_t - x^*)^\top (x_{t+1} - x^*) - \|x_{t+1} - x^*\|^2]$. Using $(x_t - x^*)^\top (x_{t+1} - x^*) \le \frac{1}{2}(\|x_t - x^*\|^2 + \|x_{t+1} - x^*\|^2)$, we get $ f(x_{t+1}) - f^* \le \frac{1}{2\gamma_t}[\|x_t - x^*\|^2 - \|x_{t+1} - x^*\|^2]$. The rest follows from non-increasing $f(x_t)$ and summing this inequality by $t$.
+
+\subsection{Lasry-Lions Smoothing}
+
+Use $f_{\mu,\delta}(x) = \max_y \min_z \{f(z) + \frac{1}{2\mu}\|z-y\|^2 - \frac{1}{2\delta} \|y-x\|^2\}$. This is double application of Moreau smoothing with function flipping. If $f$ is 1-Lipschitz, then choose $\delta,\mu = O(\epsilon)$ guarantees $\epsilon$ approximation error, and $f_{\mu,\delta}$ is $O(1/\epsilon)$-smooth. This can be applied to nonconvex functions, but has computation inefficiency in this case. 
+
+\subsection{Randomized Smoothing}
+
+Use $f_\mu(x) = \E_z[f(x + \mu z)]$, where $z$ is an isotopic Gaussian or uniform random variable. Choosing $\mu = O(\epsilon)$ guarantees $\epsilon$ approximation error, and $f_\mu(x)$ is $O(\frac{\sqrt{d}}{\epsilon})$-smooth.
